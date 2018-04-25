@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace XpandUrMusic.DTO
 {
-    public class ParentArtistsDTO
-    {
-        public ArtistsDTO Artists { get; set; }
-    }
-
     public class ArtistsDTO
     {
         public string Href { get; set; }
