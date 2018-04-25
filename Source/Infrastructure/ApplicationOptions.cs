@@ -9,7 +9,6 @@ namespace XpandUrMusic.Infrastructure
     public class ApplicationOptions
     {
         public string ApplicationName { get; set; }
-        public string SpotifyClientID { get; set; }
-        public string SpotifySecret { get; set; }
+        public string SpotifyClientKey { get; set; }
     }
 }

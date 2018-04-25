@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color: rgba(0,255,78,0.23);
 }
 
 /* Wrapping element */
@@ -24,6 +25,32 @@
 /* QR code generator */
 #qrCode {
     margin: 15px;
+}
+
+#artist-lookup
+{
+    margin-top:40px;
+}
+
+#artist-input-group 
+{
+    padding:10px 0 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+#artist-input
+{
+    width:80%;
+}
+
+#artists-display
+{
+    border:dotted;
+    border-width:2px;
+    border-color:forestgreen;
+    padding:10px;
 }
 
 /* Hide/rearrange for smaller screens */

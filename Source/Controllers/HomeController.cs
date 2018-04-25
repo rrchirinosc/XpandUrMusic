@@ -9,37 +9,39 @@ using XpandUrMusic.Models;
 using XpandUrMusic.Infrastructure;
 using Microsoft.Extensions.Options;
 
+
+
 namespace XpandUrMusic.Controllers
 {
     public class HomeController : Controller
     {
         private ApplicationOptions ApplicationOptions { get; set; }
-        private string appID;
-        private string appSecret;
+        private REST rest;
+        static private string token;
 
-        static void GetSettings()
-        {
-            
-        }
-
-        public  HomeController(
+        public HomeController(
             IOptions<ApplicationOptions> applicationOptions)
         {
             ApplicationOptions = applicationOptions.Value;
-
-            
+            rest = new REST();
         }
 
-        public IActionResult Index()
+        public async Task <IActionResult> Index()
         {
-            return View();
+            ErrorViewModel model = new ErrorViewModel();
+
+            token = await rest.GetClientCredentialsAuthTokenAsync(ApplicationOptions.SpotifyClientKey);
+
+            return View(model);
         }
 
-        public IActionResult About()
+        public async Task <IActionResult> About()
         {
+            ErrorViewModel model = new ErrorViewModel();
+
             ViewData["Message"] = "Your application description page.";
-
-            return View();
+            model.RequestId = await rest.GetArtistAsync(token, "Muse");
+            return View(model);
         }
 
         public IActionResult Contact()
@@ -52,6 +54,11 @@ namespace XpandUrMusic.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public async Task<string> ArtistLookup(string artistName)
+        {
+            return await rest.GetArtistAsync(token, artistName);
         }
     }
 }
