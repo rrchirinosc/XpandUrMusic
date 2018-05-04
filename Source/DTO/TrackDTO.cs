@@ -11,9 +11,6 @@ namespace XpandUrMusic.DTO
     // for the project at hand
     public class TrackDTO
     {
-        //The artists who performed the track. Each artist object includes a link in href to more detailed information about the artist. 
-        public ArtistDTO[] Artists { get; set; }
-
         //A link to the Web API endpoint providing full details of the track.
         public string Href { get; set; }
 

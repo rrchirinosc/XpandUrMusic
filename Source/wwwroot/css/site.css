@@ -1,7 +1,8 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
-    background-color: rgba(0,255,78,0.23);
+    color: #b38c8c;
+    background-color: rgba(0,0,0,0.9);
 }
 
 /* Wrapping element */
@@ -17,19 +18,19 @@
     line-height: 1.4;
 }
 
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
-}
 
 /* QR code generator */
 #qrCode {
     margin: 15px;
 }
 
-#artist-lookup
+#app-intro
 {
-    margin-top:40px;
+    margin-top:20px;
+}
+
+#artist-lookup {
+    margin: 40px 0;
 }
 
 #artist-input-group 
@@ -45,12 +46,90 @@
     width:80%;
 }
 
-#artists-display
+#artists-area {
+    display:none;
+}
+
+#artists-display, #albums-display {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    border: dotted;
+    border-width: 2px;
+    border-color: #b38c8c;
+    padding: 10px;
+}
+
+.artist-image, .album-image
 {
-    border:dotted;
-    border-width:2px;
-    border-color:forestgreen;
-    padding:10px;
+    width:100%;
+    height:200px;
+    margin:auto;
+}
+
+.artist-container, .album-container {
+    background-color: black;
+    width: 200px;
+    margin: 10px;
+    border: 2px solid rgba(179, 140, 140, 0.00);
+}
+
+.artist-container {
+    cursor: pointer;
+}
+
+.artist-selected{
+    border: 2px solid #b38c8c;
+}
+
+.artist-name {
+    background-color: black;
+}
+
+#get-recommendations
+{
+    align-items:flex-end;
+    margin: 20px 0;
+    overflow:hidden;
+}
+
+#album-filters
+{
+    margin:20px 0;
+}
+
+.album-name{
+    padding:5px 0;
+    color:rgba(255, 255, 255, 0.90);
+}
+
+#album-filter-items{
+    display:flex;
+    flex-wrap:wrap;
+}
+
+#musical-genres {
+    display: flex;
+    justify-content: flex-start;
+    align-content: center;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+#genres-container{
+    margin:40px 0;
+}
+
+.genre-box, .decade-box {
+    border: 1px solid #b38c8c;
+    padding:10px 5px;
+    width:110px;
+    cursor:pointer;
+}
+
+.genre-selected, .decade-selected {
+    background-color: rgba(179, 140, 140, 0.40);
+    color: white;
 }
 
 /* Hide/rearrange for smaller screens */
@@ -60,3 +139,23 @@
         display: none;
     }
 }
+
+
+/* bootstrap overrides */
+.navbar-brand {
+    color: #b38c8c !important;
+}
+
+.form-control, .btn-default {
+    background-color: rgba(179, 140, 140, 0.40) !important;
+    color: white;
+}
+
+.container .jumbotron {
+    border-radius:0;
+    background-color:rgba(0, 0, 0, 0.70)
+}
+
+
+
+

@@ -1,0 +1,43 @@
+﻿@model RecommendationsViewModel
+@{
+    ViewData["Title"] = "Recommendations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //List<string> decades = new List<string> { "1950's", "1960's", "1970's", "1980's", "1990's", "2000's", "Current" };
+    var decades = new List<KeyValuePair<string, int>>();
+    decades.Add(new KeyValuePair<string, int>("1950's", 1950));
+    decades.Add(new KeyValuePair<string, int>("1960's", 1960));
+    decades.Add(new KeyValuePair<string, int>("1970's", 1970));
+    decades.Add(new KeyValuePair<string, int>("1980's", 1980));
+    decades.Add(new KeyValuePair<string, int>("1990's", 1990));
+    decades.Add(new KeyValuePair<string, int>("2000's", 2000));
+    decades.Add(new KeyValuePair<string, int>("current", 2010));
+}
+
+<h3>Album Recommendations</h3>
+
+<div id="albums-display">
+    @{
+        @for (int i = 0; i < Model.Recommendations.Tracks.Length; i++)
+        {
+            string image = @Model.Recommendations.Tracks[i].Album.Images[0].URL == null ? "default_album_image.jpg" : @Model.Recommendations.Tracks[i].Album.Images[0].URL;
+            <div class="album-container" data-year="@Model.Recommendations.Tracks[i].Album.Release_Year">
+                <img class="album-image" src=@image>
+                <span class="artist-name">@Model.Recommendations.Tracks[i].Album.Artists[0].Name</span>
+                <span class="album-name">@Model.Recommendations.Tracks[i].Album.Name</span>
+            </div>
+        }
+    }
+</div>
+
+<div id="album-filters">
+    <h3>Filter by:</h3>
+    <div id="album-filter-items">       
+        @{
+            foreach (KeyValuePair<string, int> decade in @decades)
+            {
+                <span class="decade-box" data-year="@decade.Value.ToString()">@decade.Key</span>
+            }
+        }
+    </div>
+</div>
+

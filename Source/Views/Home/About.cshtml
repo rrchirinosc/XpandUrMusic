@@ -1,4 +1,4 @@
-﻿@model ErrorViewModel
+﻿@model RecommendationsViewModel
 
 @{
     ViewData["Title"] = "About";
@@ -6,5 +6,15 @@
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 
-<p>Use this area to provide additional information.</p>
-<p>@Model.RequestId</p>
+@*<p>Use this area to provide additional information.</p>*@
+<div id="albums-display">
+    @{
+        int count = Model.Recommendations.Tracks.Length;
+        @for (int i = 0; i < count; i++)
+        {
+            <div class="artist-container">
+                <img class="album-image" src="@Model.Recommendations.Tracks[i].Album.Images[0].URL">
+            </div>
+        }
+      }
+</div>

@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using XpandUrMusic.Models;
 using XpandUrMusic.Infrastructure;
 using Microsoft.Extensions.Options;
-
-
+using XpandUrMusic.DTO;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace XpandUrMusic.Controllers
 {
@@ -17,30 +17,24 @@ namespace XpandUrMusic.Controllers
     {
         private ApplicationOptions ApplicationOptions { get; set; }
         private REST rest;
-        static private string token;
+        private IMemoryCache cache;
 
         public HomeController(
-            IOptions<ApplicationOptions> applicationOptions)
+            IOptions<ApplicationOptions> applicationOptions,
+            IMemoryCache memCache)            
         {
             ApplicationOptions = applicationOptions.Value;
             rest = new REST();
+            cache = memCache;
         }
 
         public async Task <IActionResult> Index()
         {
             ErrorViewModel model = new ErrorViewModel();
 
-            token = await rest.GetClientCredentialsAuthTokenAsync(ApplicationOptions.SpotifyClientKey);
-
-            return View(model);
-        }
-
-        public async Task <IActionResult> About()
-        {
-            ErrorViewModel model = new ErrorViewModel();
-
-            ViewData["Message"] = "Your application description page.";
-            model.RequestId = await rest.GetArtistAsync(token, "Muse");
+            // get Spotify app token and store it in cache
+            await RetrieveToken();
+            
             return View(model);
         }
 
@@ -51,14 +45,96 @@ namespace XpandUrMusic.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Recommendations(string artistsIDs, string genresIDs)
+        {
+            RecommendationsViewModel model = new RecommendationsViewModel();
+            RecommendationsResponseDTO recommendations;
+            recommendations = await GetRecommendations(artistsIDs, genresIDs);
+
+            // fill release year for all recommended albums
+            for (int i = 0; i < recommendations.Tracks.Length; i++)
+            {
+                recommendations.Tracks[i].Album.Release_Year =
+                    await rest.GetAlbumReleaseYearAsync(await RetrieveToken(), recommendations.Tracks[i].Album.ID);
+            }
+
+            model.Recommendations = recommendations;
+            return View(model);
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public async Task<string> ArtistLookup(string artistName)
+        public async Task<JsonResult> ArtistLookup(string artistName)
         {
-            return await rest.GetArtistAsync(token, artistName);
+            ArtistsContainerDTO artists = null;
+            List<ArtistDisplayDataDTO> artistsList = new List<ArtistDisplayDataDTO>();
+            artists = await rest.GetArtistsAsync(await RetrieveToken(), artistName);
+
+            if(artists != null)
+            {
+                foreach(ArtistDTO artist in artists.Artists.Items)
+                {
+                    ArtistDisplayDataDTO artistData = new ArtistDisplayDataDTO();
+                    artistData.ID = artist.ID;
+                    artistData.Name = artist.Name;
+                    artistData.Image = (artist.Images.Length > 0 ? artist.Images[0] : null);    //first or none
+                    artistsList.Add(artistData);
+                }
+            }
+
+            return Json(artistsList);
+        }
+
+
+        public async Task<RecommendationsResponseDTO> GetRecommendations(string artistsIDs, string genresIDs)
+        {
+            RecommendationsResponseDTO recommendations = null;
+
+            // double work here wanted a list of strings but got a string of comma separated items
+            // so first to an array the passed as List
+            // TODO: see if possible to receive a list of strings from js
+            List<string> artists = artistsIDs != null ? artistsIDs.Split(',').ToList() : null;
+            List<string> genres = genresIDs != null ? genresIDs.Split(',').ToList() : null;
+
+            recommendations = await rest.GetRecommendationsAsync(await RetrieveToken(), artists, genres);
+
+            return recommendations;
+        }
+
+        public async Task<JsonResult> GetGenres()
+        {
+            GenresDTO genresDTO = null;
+            genresDTO = await RetrieveGenres();//rest.GetGenresAsync(await GetToken());
+
+            string[] genres = genresDTO.Genres;
+            return Json(genres);
+        }
+
+        public async Task<string> RetrieveToken()
+        {
+            string key = "Token";
+            string obj;
+            if (!cache.TryGetValue<string>(key, out obj))
+            {
+                obj = await rest.GetClientCredentialsAuthTokenAsync(ApplicationOptions.SpotifyClientKey); ;
+                cache.Set<string>(key, obj);
+            }
+            return obj;
+        }
+
+        public async Task<GenresDTO> RetrieveGenres()
+        {
+            string key = "Genres";
+            GenresDTO obj;
+            if (!cache.TryGetValue<GenresDTO>(key, out obj))
+            {
+                obj = await rest.GetGenresAsync(await RetrieveToken());
+                cache.Set<GenresDTO>(key, obj);
+            }
+            return obj;
         }
     }
 }
