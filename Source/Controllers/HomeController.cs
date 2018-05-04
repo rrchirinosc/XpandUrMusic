@@ -33,6 +33,7 @@ namespace XpandUrMusic.Controllers
             ErrorViewModel model = new ErrorViewModel();
 
             // get Spotify app token and store it in cache
+            // TODO: handle token expiration/renewal
             await RetrieveToken();
             
             return View(model);
