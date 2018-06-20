@@ -1,4 +1,6 @@
-﻿@model RecommendationsViewModel
+﻿@*This page is not currently in use*@
+
+@model RecommendationsViewModel
 
 @{
     ViewData["Title"] = "About";
@@ -6,7 +8,7 @@
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 
-@*<p>Use this area to provide additional information.</p>*@
+@*Display recommendations by showing their images*@
 <div id="albums-display">
     @{
         int count = Model.Recommendations.Tracks.Length;

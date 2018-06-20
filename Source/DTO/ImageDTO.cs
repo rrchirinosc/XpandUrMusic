@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace XpandUrMusic.DTO
 {
+    // Image object
     public class ImageDTO
     {
         //The image height in pixels. If unknown: null or not returned.

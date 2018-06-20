@@ -22,6 +22,7 @@ namespace XpandUrMusic.Infrastructure
         {
         }
 
+        // Fetch access token from Spotify
         public async Task<string> GetClientCredentialsAuthTokenAsync(string key)
         {
             string token = null;
@@ -52,6 +53,7 @@ namespace XpandUrMusic.Infrastructure
             return token;
         }
 
+        // Search for an artist by name
         public async Task<ArtistsContainerDTO> GetArtistsAsync(string token, string artist)
         {
             ArtistsContainerDTO artists = null;
@@ -80,6 +82,7 @@ namespace XpandUrMusic.Infrastructure
             return artists;
         }
 
+        // Fetch recommendations based on given artists and/or genres
         public async Task<RecommendationsResponseDTO> GetRecommendationsAsync(string token, List<string> artistsIDs, List<string> genreIDs)
         {
             RecommendationsResponseDTO recommendations = null;
@@ -148,6 +151,8 @@ namespace XpandUrMusic.Infrastructure
             return recommendations;
         }
 
+
+        // Get list of all available genres
         public async Task<GenresDTO> GetGenresAsync(string token)
         {
             GenresDTO genres = null;
@@ -175,6 +180,7 @@ namespace XpandUrMusic.Infrastructure
             return genres;
         }
 
+        // Fetch given album and from there its release year
         public async Task<string> GetAlbumReleaseYearAsync(string token, string albumID)
         {
             string releaseYear = null;

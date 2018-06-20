@@ -15,7 +15,7 @@
         </p>
     </div>
 
-
+    @*Find artist input and trigger*@
     <div id="artist-lookup">
         <h3>Find your favorite artist</h3>
 
@@ -27,17 +27,20 @@
         </div>
     </div>
 
+    @*Fetched artists container*@
     <div id="artists-area">
         <div id="artists-display"></div>
     </div>
 
     <hr />
 
+    @*List of available genres table*@
     <div id="genres-container">
         <h3>Preferred musical genres</h3>
         <div id="musical-genres"></div>
     </div>
 
+    @*Get recommendations button*@
     <div>
         <Form action="@Url.Action("Recommendations", "Home")" id="show-recommendations" method="post">
             <input type="hidden" name="artistsIDs" id="artists" />

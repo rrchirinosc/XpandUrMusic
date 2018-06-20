@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace XpandUrMusic.DTO
 {
+    // Spotify follower object
     public class FollowerObjectDTO
     {
         public string Href { get; set; }

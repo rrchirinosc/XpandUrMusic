@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace XpandUrMusic.DTO
 {
+    // Spotify Clien authentication response object
     public class AuthenticationResponseDTO
     {
         public string Access_Token { get; set; }
