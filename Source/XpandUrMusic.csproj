@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\HttpFormUrlEncodedContent.cs" />
     <Compile Remove="DTO\ItemDTO.cs" />
   </ItemGroup>
 
