@@ -120,7 +120,7 @@ namespace XpandUrMusic.Controllers
             string obj;
             if (!cache.TryGetValue<string>(key, out obj))
             {
-                obj = await rest.GetClientCredentialsAuthTokenAsync(ApplicationOptions.SpotifyClientKey); ;
+                obj = await rest.GetClientCredentialsAuthTokenAsync(ApplicationOptions.SpotifyClientKey);
                 cache.Set<string>(key, obj);
             }
             return obj;
