@@ -30,7 +30,7 @@ namespace XpandUrMusic.Controllers
 
         public async Task <IActionResult> Index()
         {
-            ErrorViewModel model = new ErrorViewModel();
+            ErrorViewModel model = new();
 
             // get Spotify app token and store it in cache
             // TODO: handle token expiration/renewal
@@ -48,7 +48,7 @@ namespace XpandUrMusic.Controllers
 
         public async Task<IActionResult> Recommendations(string artistsIDs, string genresIDs)
         {
-            RecommendationsViewModel model = new RecommendationsViewModel();
+            RecommendationsViewModel model = new();
             RecommendationsResponseDTO recommendations;
             recommendations = await GetRecommendations(artistsIDs, genresIDs);
 
@@ -70,15 +70,14 @@ namespace XpandUrMusic.Controllers
 
         public async Task<JsonResult> ArtistLookup(string artistName)
         {
-            ArtistsContainerDTO artists = null;
-            List<ArtistDisplayDataDTO> artistsList = new List<ArtistDisplayDataDTO>();
-            artists = await rest.GetArtistsAsync(await RetrieveToken(), artistName);
+            List<ArtistDisplayDataDTO> artistsList = new();
+            ArtistsContainerDTO artists = await rest.GetArtistsAsync(await RetrieveToken(), artistName);
 
             if(artists != null)
             {
                 foreach(ArtistDTO artist in artists.Artists.Items)
                 {
-                    ArtistDisplayDataDTO artistData = new ArtistDisplayDataDTO();
+                    ArtistDisplayDataDTO artistData = new();
                     artistData.ID = artist.ID;
                     artistData.Name = artist.Name;
                     artistData.Image = (artist.Images.Length > 0 ? artist.Images[0] : null);    //first or none
@@ -92,23 +91,20 @@ namespace XpandUrMusic.Controllers
 
         public async Task<RecommendationsResponseDTO> GetRecommendations(string artistsIDs, string genresIDs)
         {
-            RecommendationsResponseDTO recommendations = null;
-
             // double work here wanted a list of strings but got a string of comma separated items
             // so first to an array the passed as List
             // TODO: see if possible to receive a list of strings from js
             List<string> artists = artistsIDs != null ? artistsIDs.Split(',').ToList() : null;
             List<string> genres = genresIDs != null ? genresIDs.Split(',').ToList() : null;
 
-            recommendations = await rest.GetRecommendationsAsync(await RetrieveToken(), artists, genres);
+            RecommendationsResponseDTO recommendations = await rest.GetRecommendationsAsync(await RetrieveToken(), artists, genres);
 
             return recommendations;
         }
 
         public async Task<JsonResult> GetGenres()
         {
-            GenresDTO genresDTO = null;
-            genresDTO = await RetrieveGenres();//rest.GetGenresAsync(await GetToken());
+            GenresDTO genresDTO = await RetrieveGenres();//rest.GetGenresAsync(await GetToken());
 
             string[] genres = genresDTO.Genres;
             return Json(genres);
