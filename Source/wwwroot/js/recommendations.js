@@ -1,7 +1,7 @@
 ﻿var Recommendations = function () {
 
     // Decade box clicked on
-    $('.decade-box').click(function () {
+    $('.decade-box').on("click", function () {
         clickedDecade();
     });
 
@@ -87,7 +87,7 @@
                 continue;
 
             $(decadeBoxes[i]).addClass("decade-selected");
-            $(decadeBoxes[i]).bind("click", clickedDecade);
+            $(decadeBoxes[i]).on("click", clickedDecade);
         }
     }
 
@@ -95,6 +95,9 @@
 };
 
 
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", ready);
+
+
+function ready() {
     new Recommendations();
-});
+};

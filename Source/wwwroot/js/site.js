@@ -2,7 +2,7 @@
 var Index = function () {
 
     // Find button event
-    $('#artist-find').click(function () {
+    $('#artist-find').on("click", function () {
         artistLookup();
     });
 
@@ -110,21 +110,56 @@ var Index = function () {
         return genresIDs;
     }
 
+    function loader(show, forceView = false) {
+        if (show) {
+            var zIndex = 1000;
+            var imageURL = `/images/puff.svg`;
+            var html = `<div class="loadingCircles" z-index=${zIndex}><object type="image/svg+xml" data="${imageURL}"</div>`;
+            var timeout = 1000 * 10; //Max 10 sec
+            $('#genres-container').append(html);
+            timerId = setTimeout(removeLoader, timeout);
+            //console.log(".................................................loaded loader");
+        }
+        else {
+            // forceView, forces loader to show for an instant -- used as feedback
+            if (forceView) {
+                timeout = 250; //hack so it shows at least 1/4 sec
+                timerId = setTimeout(removeLoader, timeout);
+            }
+            else {
+                removeLoader();
+            }
+        }
+    }
+
+    function removeLoader() {
+        if (timerId != 0) {
+            clearTimeout(timerId);
+            timerId = 0;
+            //console.log("...................cleared timeout........................");
+        }
+        $('.loadingCircles').remove();
+        //console.log("removed loader.................................................");
+    }
+
     function setGenres() {
         var url = '/Home/GetGenres';
 
         //disengage previous click event on artists
         $('#musical-genres').off('click', '.genre-box', genreClicked);
 
+        loader(true);
         $.ajax(
             {
                 type: 'GET',
                 url: url,
                 cache: false
             }).fail(function (jqXHR, textStatus, errorThrown) {
+                loader(false);
                 alert("setGenres() failed");
             }).done(function (genres, textStatus, jqXHR) {
                 $('#musical-genres').empty();
+
                 if (genres === undefined || genres.length === 0)
                     $('#musical-genres').append("<span>Failed to fetch genres</span>".format(artistName));
                 else {
@@ -140,20 +175,23 @@ var Index = function () {
                     //enable 'Show Recommendations'
                     $('#get-recommendations').removeAttr('disabled');
                 }
+                loader(false);
             });
     }
 
     // Request recommendations and show them
-    $('#get-recommendations').click(function () {
+    $('#get-recommendations').on("click", function () {
         $('#artists').val(getArtistsIDs());
         $('#genres').val(getGenresIDs());
-        $('#show-recommendations').submit();
+        $('#show-recommendations').on("submit");
     });
 
     //load genres
     setGenres();
 };
 
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", ready);
+
+function ready() {
     new Index();
-});
+};
